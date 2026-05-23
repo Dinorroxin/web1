@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100vh; /* Garante que o body ocupe toda a altura da viewport */
+    display: flex;
+    flex-direction: column;
+}
+
+.site_header {
+    background-color: #333;
+    color: white;
+    
+    /* Substituído vh por rem para crescer com o zoom */
+    padding: 0.5rem 1rem;  
+    
+    /* Em vez de height travado em vh, usamos min-height em rem. 
+       Isso garante que se o texto crescer muito no zoom, o header expande para não cortá-lo */
+    min-height: 5rem; 
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    /* Garante que o header fique fixo no topo da página */
+    position: relative; 
+    width: 100%;
+    box-sizing: border-box; /* Garante que o padding não faça o header passar da largura da tela */
+}
+
+.site_header h1 {
+    /* 1rem = 16px padrão. 1.8rem são aprox. 28px. Cresce perfeitamente com o zoom */
+    font-size: 2.3rem; 
+    font-family: Arial, Helvetica, sans-serif;
+    
+    margin-left: 1.5rem; /* Margem responsiva ao zoom */
+    margin: 0;
+}
+
+/* --- NOVA ESTRUTURA DO DASHBOARD --- */
+
+/* Container que junta a Sidebar e o Conteúdo */
+.main_container {
+    display: flex;
+    flex: 1; /* Ocupa todo o espaço restante abaixo do header */
+    width: 100%;
+    overflow: hidden; /* Impede a tela inteira de rolar de forma desalinhada */
+}
+
+/* Painel Lateral (Fixo na esquerda) */
+.sidebar {
+    width: 250px; /* Largura fixa para o menu */
+    background-color: #222; /* Um tom ligeiramente mais escuro que o header */
+    padding: 2rem 1rem;
+    box-sizing: border-box;
+    
+    /* Garante que o painel ocupe exatamente a altura restante da tela */
+    height: calc(100vh - 5rem); 
+}
+
+/* Estrutura do Menu */
+.menu_opcoes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem; /* Espaçamento entre as opções */
+}
+
+/* --- ATUALIZAÇÃO DO MENU NO SEU INDEX.CSS --- */
+
+/* Itens do Menu (Dashboard / Enviar Email) */
+.menu_item {
+    color: #bbb;
+    text-decoration: none;
+    padding: 1rem 1rem 1rem 1.5rem; /* Aumentamos o espaço na esquerda para a linha não colar no texto */
+    font-size: 1.1rem;
+    border-radius: 0 8px 8px 0; /* Arredonda apenas o lado direito para combinar com a linha na esquerda */
+    position: relative; /* Necessário para posicionar a linha guia interna */
+    transition: all 0.3s ease;
+    display: block; /* Garante que o link ocupe toda a largura disponível */
+}
+
+/* Criamos a linha indicadora, inicialmente invisível e encolhida */
+.menu_item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 15%;          /* Deixa a linha ligeiramente menor que a altura do botão */
+    height: 70%;        /* Altura elegante da linha indicadora */
+    width: 4px;         /* Espessura da linha */
+    background-color: #005f73; /* Cor Azul-Petróleo */
+    border-radius: 0 4px 4px 0;
+    opacity: 0;         /* Escondida por padrão */
+    transform: scaleY(0); /* Efeito visual de crescer do centro para os lados */
+    transition: all 0.25s ease-in-out;
+}
+
+/* Efeito suave de passar o mouse por cima (Hover) */
+.menu_item:hover {
+    color: white;
+    /* Usa fundo preto transparente (2% de opacidade). Funciona tanto em fundos claros quanto escuros! */
+    background-color: rgba(255, 255, 255, 0.04); 
+}
+
+/* --- ESTILO ATIVO MODIFICADO (Indicação Suave) --- */
+.menu_item.active {
+    color: #e0e0e0; /* Texto ligeiramente mais claro para destacar */
+    font-weight: 500;
+    /* Um fundo acinzentado sutil usando opacidade de 8% */
+    background-color: rgba(255, 255, 255, 0.08); 
+}
+
+/* Quando o botão estiver ativo, a linha azul-petróleo aparece com animação */
+.menu_item.active::before {
+    opacity: 1;
+    transform: scaleY(1); /* Faz a linha se expandir suavemente */
+}
