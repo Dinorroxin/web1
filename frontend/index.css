@@ -62,7 +62,7 @@ body {
 .menu_opcoes {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem; /* Espaçamento entre as opções */
+    gap: 0.3rem; /* Espaçamento entre as opções */
 }
 
 /* --- ATUALIZAÇÃO DO MENU NO SEU INDEX.CSS --- */
