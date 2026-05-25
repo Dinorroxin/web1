@@ -6,20 +6,22 @@ db = getdatabase()
 
 def encrypt_password(password: str) -> str:
 
-    # Get the bytes of the password
+    # Convert the password to bytes for bcrypt
     password_bytes = password.encode('utf-8')
 
     # Add random salt
     salt = bcrypt.gensalt()
 
-    # Convert the password back to string with the salt
+    # "Mix" the password with the salt and hash it
     hashed_password = bcrypt.hashpw(password_bytes, salt)
-
+    
+    # Convert the password back to string with the salt
     return hashed_password.decode('utf-8')
 
 async def register_user(front_data):
     today_date = datetime.now(timezone.utc)
 
+    # Call the function to encrypt the password
     encrypted_password = encrypt_password(front_data["password"])
 
     new_user = {
@@ -31,6 +33,7 @@ async def register_user(front_data):
     }
 
     result = await db.users.insert_one(new_user)
+    # It will insert id in the beginning of the user
     id_user = str(result.inserted_id)
     
     return {"status": "success",

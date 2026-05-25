@@ -1,6 +1,7 @@
 import sys
+import time
 from motor.motor_asyncio import AsyncIOMotorClient
-from app.config import settings
+from config import settings
 
 # If doens't get the MONGO_URL it will print an error and exit
 if not settings.MONGO_URL:
@@ -9,9 +10,9 @@ if not settings.MONGO_URL:
     sys.exit(1)
 
 # If gets the MONGO_URL from the .env file, it will create a MongoDB client
-uri = settings.MONGO_URL
+url = settings.MONGO_URL
 
-client = AsyncIOMotorClient(uri)
+client = AsyncIOMotorClient(url)
 # The name of the database
 db = client["dbContabilidade"]
 
@@ -20,7 +21,7 @@ def getdatabase():
 
 async def unique_email():
     try:
-        # If the email is already in use it wont allow to create a new user with the same email
+        # Will create the collection users with the unique index email
         await db.users.create_index("email", unique=True)
     except Exception:
         pass

@@ -8,8 +8,11 @@ backend_dir = os.path.dirname(current_dir)
 env_path = os.path.join(backend_dir, ".env")
 
 class Settings(BaseSettings):
-    # Pydantic will automatically read the MONGO_URL from the .env file
+    # Pydantic will automatically read the MONGO_URL from the .env file and if dont find it will set it to None
+    # so it doesnt crash the aplication
     MONGO_URL: Optional[str] = None
+    
+
 
     model_config = SettingsConfigDict(
         env_file=env_path, 
