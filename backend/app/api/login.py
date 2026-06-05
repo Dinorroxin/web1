@@ -32,5 +32,5 @@ async def login_user(front_data: dict):
 
     return {"status": "success", 
             "message": "Login bem-sucedido", 
-            "user_name": str(user["name"]),
-            "user_email": str(user["email"]),}
+            "name": str(user["name"]),
+            "email": str(user["email"]),}

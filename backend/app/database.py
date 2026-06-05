@@ -1,7 +1,6 @@
 import sys
-import time
 from motor.motor_asyncio import AsyncIOMotorClient
-from config import settings
+from app.config import settings
 
 # If doens't get the MONGO_URL it will print an error and exit
 if not settings.MONGO_URL:
