@@ -1,8 +1,18 @@
+"""
+This file contains the logic for handling user login, including password verification and response generation. 
+The implementation also includes measures to mitigate timing attacks by using a dummy hash when a user is not found.
+"""
+
 import bcrypt 
 from app.database import getdatabase
 from app.schemas.auth import LoginInput
 
 db = getdatabase()
+
+# The dummy hash it's nos inside the function to avoid the bcrypt processing when the user is not found, this way we can mitigate timing attacks by equalizing the response time 
+# for both cases (user found and user not found) and prevent attackers from inferring valid emails based on response times.
+# The dummy hash is a valid bcrypt hash that will be used to perform a password check even when the user does not exist, ensuring that the time taken to respond is consistent
+# regardless of whether the email is registered or not.
 DUMMY_HASH = "$2b$12$wpxhnxhlzX0CM.XcwXvtg.3oKQzzdkCHtWYe/XWwjvpklvFx4OREe"
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:

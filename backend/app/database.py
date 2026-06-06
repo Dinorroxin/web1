@@ -1,3 +1,8 @@
+"""
+This file is responsible for connecting to the MongoDB database using the connection string provided in the .env file and creating a unique index on the email field of the users 
+collection to ensure that no two users can have the same email address.
+"""
+
 import sys
 from motor.motor_asyncio import AsyncIOMotorClient
 from app.config import settings
@@ -11,7 +16,9 @@ if not settings.MONGO_URL:
 # If gets the MONGO_URL from the .env file, it will create a MongoDB client
 url = settings.MONGO_URL
 
+# Used Motor instead  of Pymongo because Motor is an asynchronous driver for MongoDB, Pymongo not
 client = AsyncIOMotorClient(url)
+
 # The name of the database
 db = client["dbContabilidade"]
 

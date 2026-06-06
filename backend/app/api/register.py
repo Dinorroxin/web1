@@ -1,7 +1,12 @@
+"""
+This file is responsible for handling the user registration process, including encrypting the password using bcrypt and inserting the new user into the database.
+"""
+
 import bcrypt
 import pymongo.errors
 from datetime import datetime, timezone
 from app.database import getdatabase
+from app.schemas.auth import RegisterInput
 
 db = getdatabase()
 
@@ -19,8 +24,14 @@ def encrypt_password(password: str) -> str:
     # Convert the password back to string with the salt
     return hashed_password.decode('utf-8')
 
-async def register_user(front_data):
+async def register_user(front_data: RegisterInput):
+    """
+    Uses the Classes from schemas/auth.py to validate the data coming from the frontend, then encrypts the password and inserts the new user into the database, if the email 
+    is already registered it will return an error message
+    """
+        
     today_date = datetime.now(timezone.utc)
+    
     # Call the function to encrypt the password
     encrypted_password = encrypt_password(front_data.password)
 
@@ -34,10 +45,10 @@ async def register_user(front_data):
 
     try:
         result = await db.users.insert_one(new_user)
-        # It will insert id in the beginning of the user
     except pymongo.errors.DuplicateKeyError:
         return {"status": "error", "message": "E-mail já registrado"}
     
+    # It will insert id in the beginning of the user
     id_user = str(result.inserted_id)
     
     return {"status": "success",
