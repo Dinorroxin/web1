@@ -1,4 +1,5 @@
 import bcrypt
+import pymongo.errors
 from datetime import datetime, timezone
 from app.database import getdatabase
 
@@ -20,20 +21,23 @@ def encrypt_password(password: str) -> str:
 
 async def register_user(front_data):
     today_date = datetime.now(timezone.utc)
-
     # Call the function to encrypt the password
-    encrypted_password = encrypt_password(front_data["password"])
+    encrypted_password = encrypt_password(front_data.password)
 
     new_user = {
-        "name": front_data["name"],
-        "email": front_data["email"],
+        "name": front_data.name,
+        "email": front_data.email,
         "encrypted_password": encrypted_password,
-        "created_at": today_date,
+        "created_at": today_date,            
         "active": True
     }
 
-    result = await db.users.insert_one(new_user)
-    # It will insert id in the beginning of the user
+    try:
+        result = await db.users.insert_one(new_user)
+        # It will insert id in the beginning of the user
+    except pymongo.errors.DuplicateKeyError:
+        return {"status": "error", "message": "E-mail já registrado"}
+    
     id_user = str(result.inserted_id)
     
     return {"status": "success",
