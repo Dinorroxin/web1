@@ -16,7 +16,8 @@ class Settings(BaseSettings):
     # Pydantic will automatically read the MONGO_URL from the .env file and if dont find it will set it to None
     # So it doesnt crash the aplication
     MONGO_URL: Optional[str] = None
-    
+    PRIVATE_KEY_PATH: Optional[str] = None
+    PUBLIC_KEY_PATH: Optional[str] = None    
 
     # Set the config for Settings class to load .env and ignore extra fields (Security measures to prevent loading unwanted env variables that could be used for attacks)
     model_config = SettingsConfigDict(
