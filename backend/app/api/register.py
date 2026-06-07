@@ -7,6 +7,7 @@ import pymongo.errors
 from datetime import datetime, timezone
 from app.database import getdatabase
 from app.schemas.auth import RegisterInput
+from app.security import create_access_token, create_refresh_token
 
 db = getdatabase()
 
@@ -41,6 +42,7 @@ async def register_user(front_data: RegisterInput):
         "encrypted_password": encrypted_password,
         "created_at": today_date,            
         "active": True
+
     }
 
     try:
@@ -53,4 +55,7 @@ async def register_user(front_data: RegisterInput):
     
     return {"status": "success",
             "message": "User registered successfully", 
-            "user_id": id_user}
+            "user_id": id_user,
+            "access_token": create_access_token({"sub": id_user}),
+            "refresh_token": create_refresh_token({"sub": id_user})
+            }

@@ -6,6 +6,7 @@ The implementation also includes measures to mitigate timing attacks by using a 
 import bcrypt 
 from app.database import getdatabase
 from app.schemas.auth import LoginInput
+from app.security import create_access_token, create_refresh_token
 
 db = getdatabase()
 
@@ -47,4 +48,6 @@ async def login_user(front_data: LoginInput):
     return {"status": "success", 
             "message": "Login bem-sucedido", 
             "name": str(user["name"]),
-            "email": str(user["email"])}
+            "email": str(user["email"]),
+            "access_token": create_access_token({"sub": str(user["_id"])}), # Added the token function to the login
+            "refresh_token": create_refresh_token({"sub": str(user["_id"])})}
