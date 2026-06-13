@@ -6,10 +6,11 @@ Uses HTTP_201_CREATED for the register route to indicate that a new resource has
 Uses HTTP_200_OK for the login route to indicate a successful login request.
 """
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 from app.api.register import register_user
 from app.api.login import login_user
 from app.schemas.auth import RegisterInput, LoginInput
+from app.dependencies import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -20,3 +21,7 @@ async def register(data: RegisterInput):
 @router.post("/login", status_code=status.HTTP_200_OK)
 async def login(data: LoginInput):
     return await login_user(data)
+
+@router.get("/me", status_code=status.HTTP_200_OK)
+async def me(current_user = Depends(get_current_user)):
+    return  {"name": current_user["name"], "email": current_user["email"]}

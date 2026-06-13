@@ -58,6 +58,8 @@ def create_refresh_token(data: dict) -> str:
     # Set the expiration time for the token (e.g., 15 minutes)
     now = datetime.datetime.utcnow()
     expire = now + datetime.timedelta(days=7)
+
+    payload = data.copy()
     data.update({
         "exp": expire,
         "iat": now,  # Issued at time
