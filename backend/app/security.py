@@ -6,11 +6,14 @@ import os
 import datetime
 import uuid
 from jose import jwt
+from jose.exceptions import JWTError
+from fastapi import HTTPException
 from app.config import settings
 
 # Get to /backend/app where the .pem files are located
 current_dir = os.path.dirname(os.path.abspath(__file__))
 pem_dir = os.path.dirname(current_dir)
+
 
 # Fail-fast if PEM paths are not configured
 if not settings.PRIVATE_KEY_PATH or not settings.PUBLIC_KEY_PATH:
@@ -66,3 +69,10 @@ def create_refresh_token(data: dict) -> str:
     # Create the JWT token using the private key and RS256 algorithm
     token = jwt.encode(data, private_key, algorithm="RS256")
     return token
+
+def verify_token(token: str) -> dict:
+    try:
+        payload = jwt.decode(token, public_key, algorithms=["RS256"])
+        return payload
+    except JWTError:
+        raise JWTError("Couldn't validate the token")

@@ -51,11 +51,11 @@ async def register_user(front_data: RegisterInput):
         return {"status": "error", "message": "E-mail já registrado"}
     
     # It will insert id in the beginning of the user
-    id_user = str(result.inserted_id)
+    user_id = str(result.inserted_id)
     
     return {"status": "success",
             "message": "User registered successfully", 
-            "user_id": id_user,
-            "access_token": create_access_token({"sub": id_user}),
-            "refresh_token": create_refresh_token({"sub": id_user})
+            "user_id": user_id,
+            "access_token": create_access_token({"sub": user_id}),
+            "refresh_token": create_refresh_token({"sub": user_id})
             }
