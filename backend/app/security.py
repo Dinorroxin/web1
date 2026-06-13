@@ -40,7 +40,7 @@ def create_access_token(data: dict) -> str:
     now = datetime.datetime.utcnow()
     expire = now + datetime.timedelta(minutes=15)
     payload.update({
-        "exp": expire,
+        "exp": expire,  # Expiration time
         "iat": now,  # Issued at time
         "jti": str(uuid.uuid4()),  # Unique identifier for the token
         "type": "access"
@@ -55,25 +55,27 @@ def create_refresh_token(data: dict) -> str:
     # Load the private key from the .env file
     private_key = load_private_key()
 
-    # Set the expiration time for the token (e.g., 15 minutes)
+    payload = data.copy()
+
+    # Set the expiration time for the token (e.g., 7 days)
     now = datetime.datetime.utcnow()
     expire = now + datetime.timedelta(days=7)
 
-    payload = data.copy()
-    data.update({
-        "exp": expire,
+    payload.update({
+        "exp": expire,  # Expiration time
         "iat": now,  # Issued at time
         "jti": str(uuid.uuid4()),   # Unique identifier for the token
         "type": "refresh"
         })
 
     # Create the JWT token using the private key and RS256 algorithm
-    token = jwt.encode(data, private_key, algorithm="RS256")
+    token = jwt.encode(payload, private_key, algorithm="RS256")
     return token
+
 
 def verify_token(token: str) -> dict:
     try:
-        payload = jwt.decode(token, public_key, algorithms=["RS256"])
+        payload = jwt.decode(token, public_key, algorithms=["RS256"])   # Decode the public_key and return it to be used in the dependencies.py if everything its ok (exp, iat, jti)
         return payload
-    except JWTError:
+    except JWTError:    # Raisen JWTError instead of HTTPException, caller handles HTTP response
         raise JWTError("Couldn't validate the token")
