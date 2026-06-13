@@ -7,7 +7,6 @@ import datetime
 import uuid
 from jose import jwt
 from jose.exceptions import JWTError
-from fastapi import HTTPException
 from app.config import settings
 
 # Get to /backend/app where the .pem files are located

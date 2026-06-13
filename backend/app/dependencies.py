@@ -6,11 +6,10 @@ from app.security import verify_token
 from app.database import getdatabase
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/login")
-db = getdatabase()
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
-
+    db = getdatabase()
 
     try:
         payload = verify_token(token)
